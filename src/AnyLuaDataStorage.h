@@ -32,6 +32,9 @@ public:
 
 	void PushToLua(lua_State *L) const {
 		switch (m_DataType) {
+			case LUA_TNIL:
+				lua_pushnil(L);
+				break;
 			case LUA_TBOOLEAN:
 				lua_pushboolean(L, m_Data.d_int);
 				break;
@@ -72,6 +75,7 @@ private:  // methods
 	void CopyFrom(const CAnyLuaDataStorage& from) {
 		FreeBufObjIfNeed(from.m_DataType);
 		switch (from.m_DataType) {
+			case LUA_TNIL:
 			case LUA_TBOOLEAN:
 			case LUA_TNUMBER:
 				m_Data = from.m_Data;
@@ -99,6 +103,9 @@ private:  // methods
 		const int newType = lua_type(L, idx);
 		FreeBufObjIfNeed(newType);
 		switch(newType) {
+			case LUA_TNIL:
+				m_DataType = LUA_TNIL;
+				break;
 			case LUA_TBOOLEAN:
 				m_Data.d_int = lua_toboolean(L, idx);
 				m_DataType = LUA_TBOOLEAN;
@@ -120,10 +127,14 @@ private:  // methods
 				break;
 			default:  // try convert to LUA_TSTRING
 				const char* str = lua_tostring(L, idx);
-				const size_t str_len = strlen(str) + 1;
-				AllocateBuf(str_len);
-				memcpy(m_Data.d_buf.ptr, str, str_len);
-				m_DataType = LUA_TSTRING;
+				if (str) {
+					const size_t str_len = strlen(str) + 1;
+					AllocateBuf(str_len);
+					memcpy(m_Data.d_buf.ptr, str, str_len);
+					m_DataType = LUA_TSTRING;
+				} else {
+					m_DataType = LUA_TNONE;
+				}
 				break;
 		}
 	}

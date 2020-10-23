@@ -1,3 +1,6 @@
+2015-07-31: 1.2.1
+            The problem of saving unknown data types in storage is fixed.
+
 2013-11-16: 1.2.0
             Supporting of 'table' type is added.
 
