@@ -1,0 +1,17 @@
+2013-11-16: 1.2.0
+            Supporting of 'table' type is added.
+
+2013-11-12: 1.1.0
+            Supporting of 'boolean' and 'number' types is added.
+            New functions:
+                - SetVarList
+
+2013-11-11: 1.0.0
+            Initial version. It can store 'string' type only.
+            New functions:
+                - SetVar
+                - GetVar
+                - UseNameSpace
+                - GetCurrentNameSpace
+                - GetVarList
+

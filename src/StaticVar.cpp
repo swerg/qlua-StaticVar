@@ -16,13 +16,7 @@ typedef std::map<std::string, CAnyLuaDataStorage> VAR_CONTAINER;
 typedef std::pair<std::string,VAR_CONTAINER> NAME_SPACE_VAR_CONTAINER_ELEM;
 typedef std::deque<NAME_SPACE_VAR_CONTAINER_ELEM> NAME_SPACE_VAR_CONTAINER;
 
-//ToDo: про таблицы
-//      индекс надо уметь сохранять в объекте с разным типом!
-//      в нем методы: FromLuaStack(L)  или FromLua(L)
-//                    ToLuaStack(L)        ToLua(L)
-// индекс бывает любого типа! bool, number, string, table, function
-// int и double в индексе можно не различать, проверено
-// тип function писать через lua_dump
+//ToDo: тип function писать через lua_dump
 
 ////////////////////////////////////////////////////////////////////////////////
 
