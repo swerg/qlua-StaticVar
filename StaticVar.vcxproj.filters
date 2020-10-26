@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="LuaContrib">
+      <UniqueIdentifier>{52a0e7fd-9720-478b-b238-93ac86ebce17}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="contrib\lauxlib.h">
+      <Filter>LuaContrib</Filter>
+    </ClInclude>
+    <ClInclude Include="contrib\lua.h">
+      <Filter>LuaContrib</Filter>
+    </ClInclude>
+    <ClInclude Include="contrib\lua.hpp">
+      <Filter>LuaContrib</Filter>
+    </ClInclude>
+    <ClInclude Include="contrib\luaconf.h">
+      <Filter>LuaContrib</Filter>
+    </ClInclude>
+    <ClInclude Include="contrib\lualib.h">
+      <Filter>LuaContrib</Filter>
+    </ClInclude>
+    <ClInclude Include="src\AnyLuaDataStorage.h" />
+    <ClInclude Include="src\resource.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\StaticVar.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="src\StaticVar.rc" />
+  </ItemGroup>
+</Project>

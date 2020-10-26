@@ -1,4 +1,4 @@
-require("StaticVar")
+stv = require("StaticVar")
 
 message("-- StaticVar-tests.lua --")
 

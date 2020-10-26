@@ -9,7 +9,9 @@
 
 #define LUAW32_API  extern "C" __declspec(dllexport) 
 
+#if LUA_VERSION_NUM < 502
 const char* LIB_NAMESPACE = "stv";
+#endif
 const char* LIB_REGISTRY_NAME_SPACE_KEY_PREFIX = "stv.ns.";
 
 typedef std::map<std::string, CAnyLuaDataStorage> VAR_CONTAINER;
@@ -210,7 +212,7 @@ static int lua_ClearAll(lua_State *L) {
 
 ////////////////////////////////////////////////////////////////////////////////
 
-static struct luaL_reg lib_functions[] = {
+static struct luaL_Reg lib_functions[] = {
 	{"SetVar", lua_SetVar},
 	{"GetVar", lua_GetVar},
 	{"SetVarList", lua_SetVarList},
@@ -224,7 +226,12 @@ static struct luaL_reg lib_functions[] = {
 
 LUAW32_API  int luaopen_StaticVar(lua_State *L)
 {
+#if LUA_VERSION_NUM >= 502
+	lua_newtable(L);
+	luaL_setfuncs(L, lib_functions, 0);
+#else
 	luaL_register(L, LIB_NAMESPACE, lib_functions);
+#endif
 
 	return 1;
 }

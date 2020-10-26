@@ -1,5 +1,8 @@
+*.zip
 *.db
+*.opendb
 *.user
+.tmp/*
 .Build/*
 .vs/*
 
