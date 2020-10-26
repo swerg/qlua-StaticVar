@@ -8,14 +8,14 @@ typedef std::deque<TABLE_STORAGE_ELEM>  TABLE_STORAGE;
 
 public:
 
-	CAnyLuaDataStorage()  : m_DataType(LUA_TNONE) {
+	CAnyLuaDataStorage() {
 	}
 
-	CAnyLuaDataStorage(lua_State *L, int idx)  : m_DataType(LUA_TNONE) {
+	CAnyLuaDataStorage(lua_State *L, int idx) {
 		FromLua(L, idx);
 	}
 
-	CAnyLuaDataStorage(const CAnyLuaDataStorage& from) : m_DataType(LUA_TNONE) {  // copy constructor
+	CAnyLuaDataStorage(const CAnyLuaDataStorage& from) {  // copy constructor
 		CopyFrom(from);
 	}
 
@@ -46,7 +46,7 @@ public:
 				break;
 			case LUA_TTABLE: {
 				const TABLE_STORAGE* tstorage = (TABLE_STORAGE*)m_Data.d_obj;
-				lua_createtable(L, 0, tstorage->size());
+				lua_createtable(L, 0, int(tstorage->size()));
 				for (TABLE_STORAGE::const_iterator it = tstorage->begin();
 					it != tstorage->end();
 					++it) {
@@ -145,7 +145,7 @@ private:  // methods
 				case LUA_TSTRING:
 					m_DataType = LUA_TNONE;
 					delete []m_Data.d_buf.ptr;
-					m_Data.d_buf.ptr = NULL;
+					m_Data.d_buf.ptr = nullptr;
 					break;
 				case LUA_TTABLE:
 					delete (TABLE_STORAGE*)(m_Data.d_obj);
@@ -160,11 +160,11 @@ private:  // methods
 				|| (m_Data.d_buf.len > 32 && m_Data.d_buf.len/new_len > 2)
 				) {
 				delete []m_Data.d_buf.ptr;
-				m_Data.d_buf.ptr = NULL;
+				m_Data.d_buf.ptr = nullptr;
 			}
 		}
 		else {
-				m_Data.d_buf.ptr = NULL;
+				m_Data.d_buf.ptr = nullptr;
 		}
 		if (!m_Data.d_buf.ptr) {
 			m_Data.d_buf.ptr = new char[new_len];
@@ -192,7 +192,7 @@ private:  // methods
 
 private:  // data
 
-	short int m_DataType;
+	short int m_DataType{LUA_TNONE};
 	union {
 		int     d_int;
 		double  d_double;
@@ -201,6 +201,6 @@ private:  // data
 			void*  ptr;
 			size_t len;
 		} d_buf;
-	} m_Data;
+	} m_Data {};
 
 };  // class CAnyLuaDataStorage

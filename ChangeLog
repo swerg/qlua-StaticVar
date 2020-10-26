@@ -1,11 +1,21 @@
+2019-08-21: 1.3.1
+            Thread-safety has been improved for Name Spaces.
+            New functions:
+                - Clear
+                - ClearAll
+
+2019-07-18: 1.3.0
+            Supporting x64 platform has been added.
+            Project file has been upgraded to VS2015.
+
 2015-07-31: 1.2.1
-            The problem of saving unknown data types in storage is fixed.
+            The problem of saving unknown data types in storage has been fixed.
 
 2013-11-16: 1.2.0
-            Supporting of 'table' type is added.
+            Supporting of 'table' type has been added.
 
 2013-11-12: 1.1.0
-            Supporting of 'boolean' and 'number' types is added.
+            Supporting of 'boolean' and 'number' types has been added.
             New functions:
                 - SetVarList
 

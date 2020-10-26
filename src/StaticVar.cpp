@@ -1,7 +1,7 @@
 #include <windows.h>
 #include <map>
 #include <string>
-#include <deque>
+#include <sstream>
 
 #include <lua.hpp>
 
@@ -10,11 +10,11 @@
 #define LUAW32_API  extern "C" __declspec(dllexport) 
 
 const char* LIB_NAMESPACE = "stv";
-const char* LIB_REGISTRY_KEY_NAME_SPACE = "StaticVar.Current.Name.Space";
+const char* LIB_REGISTRY_NAME_SPACE_KEY_PREFIX = "stv.ns.";
 
 typedef std::map<std::string, CAnyLuaDataStorage> VAR_CONTAINER;
-typedef std::pair<std::string,VAR_CONTAINER> NAME_SPACE_VAR_CONTAINER_ELEM;
-typedef std::deque<NAME_SPACE_VAR_CONTAINER_ELEM> NAME_SPACE_VAR_CONTAINER;
+typedef std::string NAME_SPACE_KEY;
+typedef std::map<NAME_SPACE_KEY, VAR_CONTAINER> NAME_SPACE_VAR_CONTAINER;
 
 //ToDo: тип function писать через lua_dump
 
@@ -22,6 +22,7 @@ typedef std::deque<NAME_SPACE_VAR_CONTAINER_ELEM> NAME_SPACE_VAR_CONTAINER;
 
 static VAR_CONTAINER GloVarContainer;
 static NAME_SPACE_VAR_CONTAINER NameSpaceVarContainer;
+thread_local std::string RegistryKeyNameForTheThread(LIB_REGISTRY_NAME_SPACE_KEY_PREFIX);
 static bool IsGloVarContainerOnly = true;
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -44,6 +45,13 @@ BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved)
 		case DLL_PROCESS_DETACH:
 			DeleteCriticalSection(&CLocker::CritSection);
 			break;
+		case DLL_THREAD_ATTACH:
+			// make uniq reg key name for new thread of main()
+			char buf[_MAX_U64TOSTR_BASE10_COUNT];
+			if (_itoa_s(GetCurrentThreadId(), buf, 10) == 0) {
+				RegistryKeyNameForTheThread += buf;
+			}
+			break;
 	}
 	return TRUE;
 }
@@ -52,8 +60,8 @@ BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved)
 ////////////////////////////////////////////////////////////////////////////////
 
 bool getCurrentNameSpace(lua_State *L, std::string& outStr) {
-	lua_pushstring(L, LIB_REGISTRY_KEY_NAME_SPACE);
-    lua_gettable(L, LUA_REGISTRYINDEX);
+	lua_pushstring(L, RegistryKeyNameForTheThread.c_str());
+	lua_gettable(L, LUA_REGISTRYINDEX);
 
 	if (lua_isnil(L, -1))
 		return false;
@@ -63,7 +71,7 @@ bool getCurrentNameSpace(lua_State *L, std::string& outStr) {
 }
 
 void setCurrentNameSpace(lua_State *L, const char* inStr) {
-	lua_pushstring(L, LIB_REGISTRY_KEY_NAME_SPACE);
+	lua_pushstring(L, RegistryKeyNameForTheThread.c_str());
 	if (inStr && inStr[0])
 		lua_pushstring(L, inStr);
 	else
@@ -81,14 +89,7 @@ VAR_CONTAINER& getCurrentContainer(lua_State *L) {
 	if (!getCurrentNameSpace(L, current_name_space))
 		return GloVarContainer;
 
-	for (NAME_SPACE_VAR_CONTAINER::iterator it = NameSpaceVarContainer.begin();
-	     it != NameSpaceVarContainer.end();
-		 ++it) {
-		if (current_name_space == it->first)
-			return it->second;
-	}
-	NameSpaceVarContainer.push_back(NAME_SPACE_VAR_CONTAINER_ELEM(current_name_space, VAR_CONTAINER()));
-	return NameSpaceVarContainer.back().second;
+	return NameSpaceVarContainer[current_name_space];
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -119,7 +120,7 @@ static int lua_GetVar(lua_State *L) {
 
 	CLocker locker;  // Don't remove it!
 
-	VAR_CONTAINER& current_container = getCurrentContainer(L);
+	const VAR_CONTAINER& current_container = getCurrentContainer(L);
 
 	VAR_CONTAINER::const_iterator it = current_container.find(varName);
 	if (it != current_container.end()) {
@@ -155,7 +156,7 @@ static int lua_GetVarList(lua_State *L) {
 
 	const VAR_CONTAINER& current_container = getCurrentContainer(L);
 
-	lua_createtable(L, 0, current_container.size());
+	lua_createtable(L, 0, int(current_container.size()));
 
 	for (VAR_CONTAINER::const_iterator it = current_container.begin();
 		it != current_container.end();
@@ -188,6 +189,25 @@ static int lua_GetCurrentNameSpace(lua_State *L) {
 	return(1);
 }
 
+static int lua_Clear(lua_State *L) {
+	CLocker locker;  // Don't remove it!
+
+	VAR_CONTAINER& current_container = getCurrentContainer(L);
+	current_container.clear();
+
+	return(0);
+}
+
+static int lua_ClearAll(lua_State *L) {
+	CLocker locker;  // Don't remove it!
+
+	GloVarContainer.clear();
+	NameSpaceVarContainer.clear();
+
+	return(0);
+}
+
+
 ////////////////////////////////////////////////////////////////////////////////
 
 static struct luaL_reg lib_functions[] = {
@@ -197,11 +217,14 @@ static struct luaL_reg lib_functions[] = {
 	{"GetVarList", lua_GetVarList},
 	{"UseNameSpace", lua_UseNameSpace},
 	{"GetCurrentNameSpace", lua_GetCurrentNameSpace},
-	{NULL, NULL}
+	{"Clear", lua_Clear},
+	{"ClearAll", lua_ClearAll},
+	{nullptr, nullptr}
 };
 
 LUAW32_API  int luaopen_StaticVar(lua_State *L)
 {
-	luaL_openlib( L, LIB_NAMESPACE, lib_functions, 0);
-	return 0;
+	luaL_register(L, LIB_NAMESPACE, lib_functions);
+
+	return 1;
 }
