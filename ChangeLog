@@ -1,3 +1,6 @@
+2020-10-28: 1.4.1
+            Int64 type storage has been added (for Lua5.3 version only).
+
 2020-10-26: 1.4.0
             Supporting Lua5.3 on x64 platform has been added.
             Supporting Lua5.1 on x64 platform has been removed.
