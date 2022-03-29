@@ -18,7 +18,7 @@ typedef std::map<std::string, CAnyLuaDataStorage> VAR_CONTAINER;
 typedef std::string NAME_SPACE_KEY;
 typedef std::map<NAME_SPACE_KEY, VAR_CONTAINER> NAME_SPACE_VAR_CONTAINER;
 
-//ToDo: тип function писать через lua_dump
+//ToDo: С‚РёРї function РїРёСЃР°С‚СЊ С‡РµСЂРµР· lua_dump
 
 ////////////////////////////////////////////////////////////////////////////////
 

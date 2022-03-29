@@ -6,12 +6,12 @@ copy .Build\Win32-Release\*.dll .tmp\.zip\x32
 copy .Build\x64-Release\*.dll .tmp\.zip\x64
 
 copy nul .tmp\.zip\ReadMe.txt
-echo Áèáëèîòåêà StaticVar äëÿ Lua. >> .tmp\.zip\ReadMe.txt
-echo Ïîçâîëÿåò îáìåíèâàòüñÿ äàííûìè ìåæäó íåñêîëüêèìè ñêðèïòàìè Lua. >> .tmp\.zip\ReadMe.txt
-echo Ïîäðîáíîå îïèñàíèå: http://quik2dde.ru/viewtopic.php?id=61 >> .tmp\.zip\ReadMe.txt
+echo Ð‘Ð¸Ð±Ð»Ð¸Ð¾Ñ‚ÐµÐºÐ° StaticVar Ð´Ð»Ñ Lua. >> .tmp\.zip\ReadMe.txt
+echo ÐŸÐ¾Ð·Ð²Ð¾Ð»ÑÐµÑ‚ Ð¾Ð±Ð¼ÐµÐ½Ð¸Ð²Ð°Ñ‚ÑŒÑÑ Ð´Ð°Ð½Ð½Ñ‹Ð¼Ð¸ Ð¼ÐµÐ¶Ð´Ñƒ Ð½ÐµÑÐºÐ¾Ð»ÑŒÐºÐ¸Ð¼Ð¸ ÑÐºÑ€Ð¸Ð¿Ñ‚Ð°Ð¼Ð¸ Lua. >> .tmp\.zip\ReadMe.txt
+echo ÐŸÐ¾Ð´Ñ€Ð¾Ð±Ð½Ð¾Ðµ Ð¾Ð¿Ð¸ÑÐ°Ð½Ð¸Ðµ: http://quik2dde.ru/viewtopic.php?id=61 >> .tmp\.zip\ReadMe.txt
 echo. >> .tmp\.zip\ReadMe.txt
-echo \x32       -- äëÿ QUIK 6.x, 7.x >> .tmp\.zip\ReadMe.txt
-echo \x64       -- äëÿ QUIK 8.5 è äàëåå >> .tmp\.zip\ReadMe.txt
+echo \x32       -- Ð´Ð»Ñ QUIK 6.x, 7.x >> .tmp\.zip\ReadMe.txt
+echo \x64       -- Ð´Ð»Ñ QUIK 8.5 Ð¸ Ð´Ð°Ð»ÐµÐµ >> .tmp\.zip\ReadMe.txt
 
 cd .tmp\.zip
 "C:\Program Files\7-Zip\7z.exe" a -r -tZip ..\..\StaticVar.zip *.dll ReadMe.txt
