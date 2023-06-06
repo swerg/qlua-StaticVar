@@ -5,7 +5,7 @@ md .tmp\.zip\x64-Lua54
 
 copy .Build\Win32-Release\*.dll .tmp\.zip\x32-Lua51
 copy .Build\x64-Release\*.dll .tmp\.zip\x64-Lua53
-copy .Build\x64-Release\*.dll .tmp\.zip\x64-Lua54
+copy .Build\x64-Release54\*.dll .tmp\.zip\x64-Lua54
 
 copy nul .tmp\.zip\ReadMe.txt
 echo Библиотека StaticVar для Lua. >> .tmp\.zip\ReadMe.txt
